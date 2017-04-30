@@ -3,8 +3,6 @@ import Ship from './Ship';
 import Asteroid from './Asteroid';
 import { randomNumBetweenExcluding } from './helpers';
 import Backbone from 'backbone'
-import STORE from './STORE.js'
-import ACTIONS from './ACTIONS.js'
 import axios from 'axios'
 const KEY = {
   LEFT:  37,
@@ -171,10 +169,12 @@ export class Reacteroids extends Component {
     }
   }
 
-  generateAsteroids(howMany){
+  generateAsteroids(count){
     let asteroids = [];
     let ship = this.ship[0];
-    for (let i = 0; i < howMany; i++) {
+    for (let i = 0; i < count; i++) {
+     //var theAsteroid = asteroidsToCreate[i]
+      console.log('dfadsadf')
       let asteroid = new Asteroid({
         size: 80,
         position: {
@@ -234,10 +234,6 @@ export class Reacteroids extends Component {
   render() {
     let endgame;
     let message;
-         console.log(this.state.asteroidData)
-    // if (this.state.asteroidData) {
-    //   console.log(this.state.asteroidData)
-    // }
 
     if (this.state.currentScore <= 0) {
       message = '0 points... So sad.';
