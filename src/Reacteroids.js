@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import Ship from './Ship';
 import Asteroid from './Asteroid';
 import { randomNumBetweenExcluding } from './helpers';
-import Backbone from 'backbone'
-import STORE from './STORE.js'
-import ACTIONS from './ACTIONS.js'
 import axios from 'axios'
 const KEY = {
   LEFT:  37,
