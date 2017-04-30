@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import Ship from './Ship';
 import Asteroid from './Asteroid';
-import { randomNumBetweenExcluding } from './helpers'
-
+import { randomNumBetweenExcluding } from './helpers';
+import Backbone from 'backbone'
+import STORE from './STORE.js'
 const KEY = {
   LEFT:  37,
   RIGHT: 39,
@@ -62,6 +63,13 @@ export class Reacteroids extends Component {
     });
   }
 
+  componentWillMount() {
+    ACTIONS.fetchIssues()
+    STORE.on('dataUpdated', () => {
+      this.setState(STORE.data)
+    })
+  }
+
   componentDidMount() {
     window.addEventListener('keyup',   this.handleKeys.bind(this, false));
     window.addEventListener('keydown', this.handleKeys.bind(this, true));
@@ -71,12 +79,18 @@ export class Reacteroids extends Component {
     this.setState({ context: context });
     this.startGame();
     requestAnimationFrame(() => {this.update()});
+
+
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleKeys);
     window.removeEventListener('resize', this.handleKeys);
     window.removeEventListener('resize', this.handleResize);
+  }
+
+  getInitialState() {
+    return STORE.data
   }
 
   update() {
