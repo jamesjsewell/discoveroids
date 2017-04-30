@@ -15,6 +15,9 @@ export default class Asteroid {
     this.create = args.create;
     this.addScore = args.addScore;
     this.vertices = asteroidVertices(8, args.size)
+    this.isChunk = args.isChunk
+    this.asteroidName = args.asteroidName
+
   }
 
   destroy(){
@@ -49,7 +52,8 @@ export default class Asteroid {
             y: randomNumBetween(-10, 20)+this.position.y
           },
           create: this.create.bind(this),
-          addScore: this.addScore.bind(this)
+          addScore: this.addScore.bind(this),
+          isChunk: true
         });
         this.create(asteroid, 'asteroids');
       }
@@ -76,12 +80,20 @@ export default class Asteroid {
     if(this.position.y > state.screen.height + this.radius) this.position.y = -this.radius;
     else if(this.position.y < -this.radius) this.position.y = state.screen.height + this.radius;
 
-    // Draw
+
     const context = state.context;
+    console.log(context)
     context.save();
     context.translate(this.position.x, this.position.y);
     context.rotate(this.rotation * Math.PI / 180);
     context.strokeStyle = '#FFF';
+    if(this.isChunk === false){
+        context.fillStyle = "white"
+        context.font = "1rem Arial"
+        context.fillText("Hello World",10,20)
+        context.textAlign = "center"
+    }
+    
     context.lineWidth = 2;
     context.beginPath();
     context.moveTo(0, -this.radius);
