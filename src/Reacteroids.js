@@ -89,9 +89,6 @@ export class Reacteroids extends Component {
     window.removeEventListener('resize', this.handleResize);
   }
 
-  // getInitialState() {
-  //   return STORE.data
-  // }
 
   update() {
     const context = this.state.context;
