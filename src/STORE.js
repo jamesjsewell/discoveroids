@@ -3,7 +3,7 @@ import {AsteroidCollection} from './Models.js'
 
 const STORE = Object.assign({}, Backbone.Events, {
 	data : {
-		asteroidCollection = new AsteroidCollection()
+		asteroidCollection : new AsteroidCollection()
 	},
 	get: function(prop) {
 		if (this.data[prop] === undefined) {

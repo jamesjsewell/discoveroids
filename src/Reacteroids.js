@@ -4,6 +4,8 @@ import Asteroid from './Asteroid';
 import { randomNumBetweenExcluding } from './helpers';
 import Backbone from 'backbone'
 import STORE from './STORE.js'
+import ACTIONS from './ACTIONS.js'
+import axios from 'axios'
 const KEY = {
   LEFT:  37,
   RIGHT: 39,
@@ -18,6 +20,7 @@ export class Reacteroids extends Component {
   constructor() {
     super();
     this.state = {
+      asteroidData: {},
       screen: {
         width: window.innerWidth,
         height: window.innerHeight,
@@ -63,12 +66,6 @@ export class Reacteroids extends Component {
     });
   }
 
-  componentWillMount() {
-    ACTIONS.fetchIssues()
-    STORE.on('dataUpdated', () => {
-      this.setState(STORE.data)
-    })
-  }
 
   componentDidMount() {
     window.addEventListener('keyup',   this.handleKeys.bind(this, false));
@@ -79,7 +76,10 @@ export class Reacteroids extends Component {
     this.setState({ context: context });
     this.startGame();
     requestAnimationFrame(() => {this.update()});
-
+    axios.get(`https://api.nasa.gov/neo/rest/v1/neo/browse?api_key=SbpWDpbPprCJtaTuRMhDd601quGYL0VrdOOO09CW`)
+      .then(res => {
+        this.setState({ asteroidData: res });
+      });
 
   }
 
@@ -89,9 +89,9 @@ export class Reacteroids extends Component {
     window.removeEventListener('resize', this.handleResize);
   }
 
-  getInitialState() {
-    return STORE.data
-  }
+  // getInitialState() {
+  //   return STORE.data
+  // }
 
   update() {
     const context = this.state.context;
@@ -236,6 +236,10 @@ export class Reacteroids extends Component {
   render() {
     let endgame;
     let message;
+         console.log(this.state.asteroidData)
+    // if (this.state.asteroidData) {
+    //   console.log(this.state.asteroidData)
+    // }
 
     if (this.state.currentScore <= 0) {
       message = '0 points... So sad.';

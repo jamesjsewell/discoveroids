@@ -1,4 +1,5 @@
 import Backbone from 'backbone'
+import $ from 'jquery'
 
 export var AsteroidCollection = Backbone.Collection.extend({
 	model : AsteroidModel,
