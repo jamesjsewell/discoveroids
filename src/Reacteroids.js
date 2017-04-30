@@ -106,9 +106,6 @@ export class Reacteroids extends Component {
     window.removeEventListener('resize', this.handleResize);
   }
 
-  // getInitialState() {
-  //   return STORE.data
-  // }
 
   update() {
     const context = this.state.context;
@@ -202,7 +199,8 @@ export class Reacteroids extends Component {
           y: randomNumBetweenExcluding(0, this.state.screen.height, ship.position.y-60, ship.position.y+60)
         },
         create: this.createObject.bind(this),
-        addScore: this.addScore.bind(this)
+        addScore: this.addScore.bind(this),
+        isChunk: false
       });
       this.createObject(asteroid, 'asteroids');
     }
@@ -278,6 +276,7 @@ export class Reacteroids extends Component {
 
     return (
       <div>
+        <div className="bg"></div>
         { endgame }
         <span className="score current-score" >Score: {this.state.currentScore}</span>
         <span className="score top-score" >Top Score: {this.state.topScore}</span>
