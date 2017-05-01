@@ -3,6 +3,7 @@ import Ship from './Ship';
 import Asteroid from './Asteroid';
 import { randomNumBetweenExcluding } from './helpers';
 import axios from 'axios'
+import asteroidApiObj from './asteroidApiObj.js'
 const KEY = {
   LEFT:  37,
   RIGHT: 39,
@@ -15,9 +16,25 @@ const KEY = {
 
 export class Reacteroids extends Component {
   constructor() {
+    // get only asteroids that have close_approach_data
+    var closeAppoachAsteroids = asteroidApiObj.near_earth_objects
+      .filter(function(asteroid) {
+        return asteroid.close_approach_data.length > 0;
+      });
+    var mappedAsteroidData = closeAppoachAsteroids.map(function(asteroid) {
+      var sizeInKm = asteroid.estimated_diameter.kilometers;
+      return {
+        name: asteroid.name,
+        earliestApproachDate: asteroid.close_approach_data[0].close_approach_date,
+        missDistanceInKm: +asteroid.close_approach_data[0].miss_distance.kilometers, //convert string to number
+        orbitingBody: asteroid.close_approach_data[0].orbiting_body,
+        sizeInKm: (sizeInKm.estimated_diameter_max + sizeInKm.estimated_diameter_min) / 2,
+        speedInKm: +asteroid.close_approach_data[0].relative_velocity.kilometers_per_hour //convert string to number
+      }
+    });
     super();
     this.state = {
-      asteroidData: {},
+      asteroidData: mappedAsteroidData,
       screen: {
         width: window.innerWidth,
         height: window.innerHeight,
@@ -31,7 +48,7 @@ export class Reacteroids extends Component {
         down  : 0,
         space : 0,
       },
-      asteroidCount: 3,
+      asteroidCount: 1,
       currentScore: 0,
       topScore: localStorage['topscore'] || 0,
       inGame: false
@@ -73,11 +90,6 @@ export class Reacteroids extends Component {
     this.setState({ context: context });
     this.startGame();
     requestAnimationFrame(() => {this.update()});
-    axios.get(`https://api.nasa.gov/neo/rest/v1/neo/browse?api_key=SbpWDpbPprCJtaTuRMhDd601quGYL0VrdOOO09CW`)
-      .then(res => {
-        this.setState({ asteroidData: res });
-      });
-
   }
 
   componentWillUnmount() {
@@ -152,6 +164,7 @@ export class Reacteroids extends Component {
     // Make asteroids
     this.asteroids = [];
     this.generateAsteroids(this.state.asteroidCount)
+    console.log('startGame this.state.asteroidData', this.state.asteroidData);
   }
 
   gameOver(){
@@ -168,10 +181,11 @@ export class Reacteroids extends Component {
     }
   }
 
-  generateAsteroids(howMany){
+  generateAsteroids(count){
     let asteroids = [];
     let ship = this.ship[0];
-    for (let i = 0; i < howMany; i++) {
+    for (let i = 0; i < count; i++) {
+     //var theAsteroid = asteroidsToCreate[i]
       let asteroid = new Asteroid({
         size: 80,
         position: {
@@ -231,10 +245,8 @@ export class Reacteroids extends Component {
   render() {
     let endgame;
     let message;
-         console.log(this.state.asteroidData)
-    // if (this.state.asteroidData) {
-    //   console.log(this.state.asteroidData)
-    // }
+
+    console.log('this.state.asteroidData', this.state.asteroidData)
 
     if (this.state.currentScore <= 0) {
       message = '0 points... So sad.';

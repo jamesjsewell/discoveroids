@@ -82,7 +82,6 @@ export default class Asteroid {
 
 
     const context = state.context;
-    console.log(context)
     context.save();
     context.translate(this.position.x, this.position.y);
     context.rotate(this.rotation * Math.PI / 180);
